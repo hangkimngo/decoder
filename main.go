@@ -2,7 +2,6 @@ package main
 
 import (
 	"decoder/utils"
-
 	"fmt"
 	"os"
 )
@@ -16,6 +15,10 @@ output:
 )
 
 func main() {
+	if len(os.Args) != 2 {
+		fmt.Println(usageText)
+		return
+	}
 	if os.Args[1] == "-h" {
 		fmt.Println(usageText)
 		return
@@ -31,6 +34,13 @@ func main() {
 		fmt.Println("Error")
 		return
 	}
-	fmt.Println()
+
+	output, err := utils.Decode(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(output)
 
 }
