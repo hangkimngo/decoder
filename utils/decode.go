@@ -18,21 +18,32 @@ func Decode(input string) (string, error) {
 
 	output := re.ReplaceAllStringFunc(input, func(match string) string {
 		content := match[1 : len(match)-1]
+
+		spaceIndex := strings.Index(content, " ")
+		if spaceIndex == -1 {
+			decodeErr = errors.New("Error")
+		}
 		parts := strings.SplitN(content, " ", 2)
 		fmt.Println(parts)
 		if len(parts) != 2 {
-			decodeErr = errors.New("invalid format")
+			decodeErr = errors.New("Error")
+			return ""
+		}
+		firstArg := content[:spaceIndex]
+		secondArg := content[spaceIndex+1:]
+
+		if secondArg == "" {
+			decodeErr = errors.New("Error")
 			return ""
 		}
 
-		count, err := strconv.Atoi(parts[0])
-		fmt.Println(count)
+		count, err := strconv.Atoi(firstArg)
 		if err != nil {
-			decodeErr = errors.New("The first argument is not a number.")
+			decodeErr = errors.New("Error")
 			return ""
 		}
-		chars := parts[1]
-		return strings.Repeat(chars, count)
+
+		return strings.Repeat(secondArg, count)
 	})
 
 	if decodeErr != nil {
