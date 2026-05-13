@@ -1,41 +1,55 @@
 package main
 
 import (
-	"decoder/utils"
+	u "decoder/utils"
+	"errors"
+	"flag"
 	"fmt"
 	"os"
 )
 
 const (
-	usageText = `art decoder usage:
-go run . "[5 #][5 -_]-[5 #]"
+	usageText = `Usage:
+go run . [OPTION] "[encoded text]"
 
-output:
-#####-_-_-_-_-_-#####`
+Options:
+	-encode    encode mode
+	-multi     multi-line mode
+	-h         show help`
 )
 
 func main() {
-	if len(os.Args) != 2 {
+	var encode, fileMode bool
+	flag.BoolVar(&encode, "encode", false, "encode art instead of decoding")
+	flag.BoolVar(&fileMode, "file", false, "input file instead of string")
+
+	flag.Usage = func() {
 		fmt.Println(usageText)
-		return
 	}
-	if os.Args[1] == "-h" {
-		fmt.Println(usageText)
+	flag.Parse()
+
+	args := flag.Args()
+
+	if len(args) != 1 {
+		flag.Usage()
 		return
 	}
 
-	if len(os.Args) != 2 {
-		fmt.Println(usageText)
-		return
+	var input, output string
+	var err error
+
+	if fileMode {
+		data, err := os.ReadFile(args[0])
+		if err != nil {
+			fmt.Println(errors.New("Error reading file"))
+		}
+		stringData := string(data)
+		output, err = u.DecodeMultiLines(stringData)
+	} else {
+		input = args[0]
+		output, err = u.Decode(input)
 	}
 
-	input := os.Args[1]
-	if !utils.BalanceBracket(input) {
-		fmt.Println("Error")
-		return
-	}
-
-	output, err := utils.Decode(input)
 	if err != nil {
 		fmt.Println(err)
 		return
