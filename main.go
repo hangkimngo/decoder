@@ -15,14 +15,16 @@ go run . [OPTION] "[encoded text]"
 Options:
 	-encode    encode mode
 	-multi     multi-line mode
+	-file      input file mode	
 	-h         show help`
 )
 
 func main() {
-	var encode, fileMode bool
+	var encode, multiline bool
+	var file string
 	flag.BoolVar(&encode, "encode", false, "encode art instead of decoding")
-	flag.BoolVar(&fileMode, "file", false, "input file instead of string")
-
+	flag.StringVar(&file, "file", "", "decide input file contents instead of string")
+	flag.BoolVar(&multiline, "multi", false, "decode multiple lines from argument")
 	flag.Usage = func() {
 		fmt.Println(usageText)
 	}
@@ -30,22 +32,25 @@ func main() {
 
 	args := flag.Args()
 
-	if len(args) != 1 {
-		flag.Usage()
-		return
-	}
-
 	var input, output string
 	var err error
 
-	if fileMode {
-		data, err := os.ReadFile(args[0])
+	if file != "" {
+		data, err := os.ReadFile(file)
 		if err != nil {
 			fmt.Println(errors.New("Error reading file"))
 		}
 		stringData := string(data)
-		output, err = u.DecodeMultiLines(stringData)
+		output, err = u.DecodeLines(stringData)
+	} else if multiline {
+		input := u.ScanLines()
+		output, err = u.DecodeLines(input)
 	} else {
+		if len(args) != 1 {
+			flag.Usage()
+			return
+		}
+
 		input = args[0]
 		output, err = u.Decode(input)
 	}

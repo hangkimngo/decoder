@@ -24,6 +24,7 @@ func Decode(input string) (string, error) {
 		spaceIndex := strings.Index(content, " ")
 		if spaceIndex == -1 {
 			decodeErr = errors.New("Error: The arguments are not separated by a space")
+			return ""
 		}
 		parts := strings.SplitN(content, " ", 2)
 

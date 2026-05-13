@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func DecodeMultiLines(text string) (string, error) {
+func DecodeLines(text string) (string, error) {
 	lines := strings.Split(text, "\n")
 
 	var decodedLines []string
