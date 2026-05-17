@@ -39,12 +39,13 @@ func main() {
 		data, err := os.ReadFile(file)
 		if err != nil {
 			fmt.Println(errors.New("Error reading file"))
+			return
 		}
 		stringData := string(data)
-		output, err = u.DecodeLines(stringData)
+		output, err = u.Multiline(stringData, encode)
 	} else if multiline {
 		input := u.ScanLines()
-		output, err = u.DecodeLines(input)
+		output, err = u.Multiline(input, encode)
 	} else {
 		if len(args) != 1 {
 			flag.Usage()
@@ -52,7 +53,11 @@ func main() {
 		}
 
 		input = args[0]
-		output, err = u.Decode(input)
+		if encode {
+			output, err = u.Encode(input)
+		} else {
+			output, err = u.Decode(input)
+		}
 	}
 
 	if err != nil {
