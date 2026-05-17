@@ -57,7 +57,7 @@ Show help:
 go run . -h
 ```
 
-Decode text:
+Decode string:
 
 ```bash
 go run . "ABC[10 D]EFG"
@@ -69,7 +69,7 @@ Returns:
 ABCDDDDDDDDDDEFG  
 ```
 
-Encode text:
+Encode string:
 
 ```bash
 go run . -encode "aaaaabbbb"
