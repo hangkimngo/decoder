@@ -46,11 +46,6 @@ git clone <repository-url>
 cd decoder
 ```
 
-Run the project:
-
-```bash
-go run .
-```
 
 ---
 
