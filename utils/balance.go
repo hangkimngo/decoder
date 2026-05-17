@@ -9,7 +9,7 @@ func BalanceBracket(s string) bool {
 		case '[':
 			stack = append(stack, c)
 		case ']':
-			if len(stack) == 0 {
+			if len(stack) != 1 {
 				return false
 			}
 			stack = stack[:len(stack)-1]
